@@ -3,7 +3,7 @@ import './App.css';
 import Dashboard from './Dashboard';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Helmet from 'react-helmet';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -22,7 +22,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Helmet>
-        <style>{`body { 
+        <style>{`body {
         background-color: ${theme.palette.primary.main};
         color: ${theme.palette.secondary.main};
         font-family: 'Nunito', sans-serif;
@@ -36,7 +36,9 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Dashboard/>
+      <Box sx={{ width: '85vw', marginTop: 8 }}>
+        <Dashboard />
+      </Box>
       {/*<Grid container spacing={5}>
 
         <Grid size={{ xs: 12, xl: 3 }}>Elemento: Indicador 1</Grid>
@@ -54,4 +56,4 @@ function App() {
   )
 }
 
-export {theme, App}
+export { theme, App }

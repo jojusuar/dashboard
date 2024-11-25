@@ -9,7 +9,6 @@ type LocationBannerProps = {
     city: string;
     country: string;
     timezone: string;
-    alt: string;
     lat: string;
     lon: string;
 };
@@ -27,19 +26,16 @@ class LocationBanner extends React.Component<LocationBannerProps> {
                     border: '2pt solid transparent'
                 }}>
                 <CardContent>
-                    <Typography variant="h4" component="div">
+                    <Typography variant="h4" component="div" sx={{fontFamily: 'Nunito, sans-serif'}}>
                         {this.props.city}, {this.props.country}
                     </Typography>
-                    <Typography variant="body2" sx={{ mt: 1, fontSize: "1.5rem" }}>
+                    <Typography variant="body2" sx={{ mt: 1, fontSize: "1.5rem", fontFamily: 'Nunito, sans-serif'}}>
                         Zona horaria: UTC {this.props.timezone}
                     </Typography>
-                    <Typography variant="body2" sx={{ fontSize: "1.5rem" }}>
-                        Altura: {this.props.alt} m.s.n.m.
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontSize: "1.5rem" }}>
+                    <Typography variant="body2" sx={{ fontSize: "1.5rem", fontFamily: 'Nunito, sans-serif' }}>
                         Latitud: {this.props.lat}°
                     </Typography>
-                    <Typography variant="body2" sx={{ fontSize: "1.5rem" }}>
+                    <Typography variant="body2" sx={{ fontSize: "1.5rem", fontFamily: 'Nunito, sans-serif' }}>
                         Longitud: {this.props.lon}°
                     </Typography>
                 </CardContent>
