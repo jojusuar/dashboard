@@ -44,11 +44,25 @@ function App() {
           dataToIndicators.push({ "title": "Location", "subtitle": "Altitude", "value": altitude })
           setIndicators(dataToIndicators)
 
+          const toUTCminus5 = (dateString: string | null): string => {
+            if(!dateString) {
+              return "";
+            }
+            const date = new Date(dateString);
+            const utcOffset = -5;
+            const adjustedDate = new Date(date.getTime() + utcOffset * 60 * 60 * 1000);
+            const hours = adjustedDate.getUTCHours().toString().padStart(2, "0");
+            const minutes = adjustedDate.getUTCMinutes().toString().padStart(2, "0");
+            const seconds = adjustedDate.getUTCSeconds().toString().padStart(2, "0");
+          
+            return `${hours}:${minutes}:${seconds}`;
+          };
+
           let forecasts = xml.getElementsByTagName("time");
           for( let i = 0; i < 6; i++ ) {
             let time = forecasts[i];
-            let from = time.getAttribute("from");
-            let to = time.getAttribute("to");
+            let from = toUTCminus5(time.getAttribute("from"));
+            let to = toUTCminus5(time.getAttribute("to"));
             let precipitation = time.getElementsByTagName("precipitation")[0].getAttribute("probability");
             let humidity = time.getElementsByTagName("humidity")[0].getAttribute("value");
             let clouds = time.getElementsByTagName("clouds")[0].getAttribute("all");
