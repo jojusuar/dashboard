@@ -3,7 +3,6 @@ import Grid from '@mui/material/Grid2'
 import IndicatorWeather from './components/IndicationWeather'
 import TableWeather from './components/TableWeather';
 import ControlWeather from './components/ControlWeather';
-import LineChartWeather from './components/LineChartWeather';
 import { useEffect, useState } from 'react';
 import Item from './interface/Item';
 
@@ -17,6 +16,17 @@ function App() {
 
   let [indicators, setIndicators] = useState<Indicator[]>([]);
   let [items, setItems] = useState<Item[]>([]);
+  // const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+  // const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  // const xLabels = [
+  //     'Page A',
+  //     'Page B',
+  //     'Page C',
+  //     'Page D',
+  //     'Page E',
+  //     'Page F',
+  //     'Page G',
+  // ];
 
   useEffect(() => {
     let request = async () => {
@@ -45,7 +55,7 @@ function App() {
           setIndicators(dataToIndicators)
 
           const toUTCminus5 = (dateString: string | null): string => {
-            if(!dateString) {
+            if (!dateString) {
               return "";
             }
             const date = new Date(dateString);
@@ -54,12 +64,12 @@ function App() {
             const hours = adjustedDate.getUTCHours().toString().padStart(2, "0");
             const minutes = adjustedDate.getUTCMinutes().toString().padStart(2, "0");
             const seconds = adjustedDate.getUTCSeconds().toString().padStart(2, "0");
-          
+
             return `${hours}:${minutes}:${seconds}`;
           };
 
           let forecasts = xml.getElementsByTagName("time");
-          for( let i = 0; i < 6; i++ ) {
+          for (let i = 0; i < 6; i++) {
             let time = forecasts[i];
             let from = toUTCminus5(time.getAttribute("from"));
             let to = toUTCminus5(time.getAttribute("to"));
@@ -102,19 +112,16 @@ function App() {
       {renderIndicators()}
 
       {/* Tabla */}
-      <Grid size={{ xs: 12, xl: 8 }}>
+      <Grid size={{ xs: 12 }}>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12, xl: 3 }}>
-            <ControlWeather />
+          <Grid size={{ xs: 12, xl: 4}}>
+            <ControlWeather itemsIn={items} />
           </Grid>
-          <Grid size={{ xs: 12, xl: 9 }}>
-            <TableWeather itemsIn={ items } />
+          <Grid size={{ xs: 12, xl: 8}}>
+            <TableWeather itemsIn={items} />
           </Grid>
-        </Grid></Grid>
-
-      {/* Gráfico */}
-      <Grid size={{ xs: 12, xl: 4 }}> <LineChartWeather /></Grid>
-
+        </Grid>
+      </Grid>
     </Grid>
   )
 }

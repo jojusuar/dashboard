@@ -6,9 +6,17 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState, useRef } from 'react';
+import LineChartWeather from './LineChartWeather';
+import Item from '../interface/Item';
+import ChartData from '../interface/ChartData';
 
-export default function ControlWeather() {
+interface ControlWeatherProps {
+    itemsIn: Item[] | null;
+}
+
+export default function ControlWeather({ itemsIn }: ControlWeatherProps) {
     let [selected, setSelected] = useState(-1);
+    let [chartData, setChartData] = useState<ChartData>({uData: [], xLabels: []});
 
     const descriptionRef = useRef<HTMLDivElement>(null);
 
@@ -19,14 +27,25 @@ export default function ControlWeather() {
         if (descriptionRef.current !== null) {
             descriptionRef.current.innerHTML = (idx >= 0) ? items[idx]["description"] : ""
         }
-
+        setChartData({uData: items[idx]["values"], xLabels: start});
     };
+
+    let start: (string | null)[] = [];
+    let humidity: (number | null)[] = [];
+    let precipitation: (number  | null)[] = [];
+    let clouds: (number | null)[] = [];
+    itemsIn?.map(item => {
+        start.push(item.dateStart);
+        humidity.push(parseFloat(item.humidity));
+        precipitation.push(parseFloat(item.precipitation));
+        clouds.push(parseFloat(item.clouds));
+    });
 
     {/* Arreglo de objetos */ }
     let items = [
-        { "name": "Precipitación", "description": "Cantidad de agua que cae sobre una superficie en un período específico." },
-        { "name": "Humedad", "description": "Cantidad de vapor de agua presente en el aire, generalmente expresada como un porcentaje." },
-        { "name": "Nubosidad", "description": "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida." }
+        { "name": "Precipitación", "description": "Cantidad de agua que cae sobre una superficie en un período específico.", "values": precipitation},
+        { "name": "Humedad", "description": "Cantidad de vapor de agua presente en el aire, generalmente expresada como un porcentaje.", "values": humidity},
+        { "name": "Nubosidad", "description": "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida.", "values": clouds}
     ]
 
     {/* Arreglo de elementos JSX */ }
@@ -67,9 +86,7 @@ export default function ControlWeather() {
             </Box>
 
             <Typography ref={descriptionRef} mt={2} component="p" color="text.secondary" />
-
+            <LineChartWeather uData={chartData ? chartData.uData : []} xLabels={chartData ? chartData.xLabels : []} />
         </Paper>
-
-
     )
 }
