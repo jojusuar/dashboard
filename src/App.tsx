@@ -5,33 +5,38 @@ import TableWeather from './components/TableWeather';
 import ControlWeather from './components/ControlWeather';
 import { useEffect, useState } from 'react';
 import Item from './interface/Item';
+import { AppBar, createTheme, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import Helmet from 'react-helmet';
+import SearchBar from './components/SearchBar';
 
 interface Indicator {
-  title?: String;
-  subtitle?: String;
-  value?: String;
+  title?: string;
+  subtitle?: string;
+  value?: string;
 }
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#25272b',
+    },
+    secondary: {
+      main: '#e2e4e1',
+    }
+  },
+});
 
 function App() {
 
   let [indicators, setIndicators] = useState<Indicator[]>([]);
   let [items, setItems] = useState<Item[]>([]);
-  // const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  // const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  // const xLabels = [
-  //     'Page A',
-  //     'Page B',
-  //     'Page C',
-  //     'Page D',
-  //     'Page E',
-  //     'Page F',
-  //     'Page G',
-  // ];
+  let [city, setCity] = useState<string>("Guayaquil");
 
   useEffect(() => {
     let request = async () => {
       try {
-        let response = await fetch("https://api.openweathermap.org/data/2.5/forecast?q=Guayaquil&mode=xml&appid=97ba37b25701174cbb5a00019fd2efe1", { method: 'GET' });
+        if (!city || city.length == 0) setCity("Guayaquil");
+        let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&mode=xml&appid=97ba37b25701174cbb5a00019fd2efe1`, { method: 'GET' });
         if (response.ok) {
           let parser = new DOMParser();
           let xml: XMLDocument = parser.parseFromString(await response.text(), "application/xml");
@@ -91,7 +96,7 @@ function App() {
       catch (error) { }
     };
     request()
-  }, []);
+  }, [city]);
   let renderIndicators = () => {
     return indicators
       .map(
@@ -100,29 +105,48 @@ function App() {
             <IndicatorWeather
               title={indicator["title"]}
               subtitle={indicator["subtitle"]}
-              value={indicator["value"]} />
+              value={indicator["value"]}
+              bgColor={theme.palette.secondary.main} />
           </Grid>
         )
       )
   }
   return (
-    <Grid container spacing={5}>
+    <ThemeProvider theme={theme}>
+      <Helmet>
+        <style>{`body {
+        background-color: ${theme.palette.primary.main};
+        color: ${theme.palette.secondary.main};
+        font-family: 'Nunito', sans-serif;
+        } 
+        `}</style>
+      </Helmet>
+      <AppBar position="fixed" color="primary">
+        <Toolbar sx={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', fontFamily: 'Nunito, sans-serif' }} color={theme.palette.secondary.main}>
+            GUAYACLIMA
+          </Typography>
+          <SearchBar setter={setCity} bgColor={theme.palette.secondary.main} />
+        </Toolbar>
+      </AppBar>
+      <Grid container spacing={5} sx={{ mt: 8 }}>
 
-      {/* Indicadores */}
-      {renderIndicators()}
+        {/* Indicadores */}
+        {renderIndicators()}
 
-      {/* Tabla */}
-      <Grid size={{ xs: 12 }}>
-        <Grid container spacing={2}>
-          <Grid size={{ xs: 12, xl: 4}}>
-            <ControlWeather itemsIn={items} />
-          </Grid>
-          <Grid size={{ xs: 12, xl: 8}}>
-            <TableWeather itemsIn={items} />
+        {/* Tabla */}
+        <Grid size={{ xs: 12 }}>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, xl: 5 }}>
+              <ControlWeather itemsIn={items} bgColor={theme.palette.secondary.main}/>
+            </Grid>
+            <Grid size={{ xs: 12, xl: 7 }}>
+              <TableWeather itemsIn={items} bgColor={theme.palette.secondary.main} />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </ThemeProvider>
   )
 }
 

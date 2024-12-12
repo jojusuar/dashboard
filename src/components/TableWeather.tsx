@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 
 interface MyProp {
   itemsIn: Item[];
+  bgColor: string;
 }
 
 export default function BasicTable(props: MyProp) {
@@ -19,7 +20,7 @@ export default function BasicTable(props: MyProp) {
   }, [props]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx = {{backgroundColor: props.bgColor}}>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>

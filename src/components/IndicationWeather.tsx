@@ -1,9 +1,10 @@
 import { Paper, Typography } from "@mui/material";
 
 interface Indicator {
-    title?: String;
-    subtitle?: String;
-    value?: String;
+    title?: string;
+    subtitle?: string;
+    value?: string;
+    bgColor: string;
 }
 
 export default function IndicatorWeather(config: Indicator) {
@@ -12,7 +13,8 @@ export default function IndicatorWeather(config: Indicator) {
             sx={{
                 p: 2,
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                backgroundColor: config.bgColor
             }}
         >
             <Typography component="h2" variant="h6"
