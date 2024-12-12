@@ -19,6 +19,7 @@ export default function SearchBar({ setter, bgColor }: SearchBarProps) {
             onKeyDown={(event) => {
                 if (event.key === "Enter") {
                     setter(query);
+                    (event.target as HTMLElement).blur();
                 }
             }}
         />
